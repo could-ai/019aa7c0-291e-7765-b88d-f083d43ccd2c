@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class StoryArgs {
@@ -39,10 +40,15 @@ class StoryScreen extends StatelessWidget {
               background: Stack(
                 fit: StackFit.expand,
                 children: [
-                  Image.file(
-                    File(args.imagePath),
-                    fit: BoxFit.cover,
-                  ),
+                  kIsWeb
+                      ? Image.network(
+                          args.imagePath,
+                          fit: BoxFit.cover,
+                        )
+                      : Image.file(
+                          File(args.imagePath),
+                          fit: BoxFit.cover,
+                        ),
                   const DecoratedBox(
                     decoration: BoxDecoration(
                       gradient: LinearGradient(

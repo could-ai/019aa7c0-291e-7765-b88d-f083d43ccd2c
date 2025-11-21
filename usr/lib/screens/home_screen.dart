@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import '../services/mock_ai_service.dart';
@@ -12,7 +13,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  File? _selectedImage;
+  XFile? _selectedImage;
   bool _isGenerating = false;
   final ImagePicker _picker = ImagePicker();
   final MockAIService _aiService = MockAIService();
@@ -22,7 +23,7 @@ class _HomeScreenState extends State<HomeScreen> {
       final XFile? pickedFile = await _picker.pickImage(source: source);
       if (pickedFile != null) {
         setState(() {
-          _selectedImage = File(pickedFile.path);
+          _selectedImage = pickedFile;
         });
       }
     } catch (e) {
@@ -124,10 +125,15 @@ class _HomeScreenState extends State<HomeScreen> {
                     ? Stack(
                         fit: StackFit.expand,
                         children: [
-                          Image.file(
-                            _selectedImage!,
-                            fit: BoxFit.cover,
-                          ),
+                          kIsWeb
+                              ? Image.network(
+                                  _selectedImage!.path,
+                                  fit: BoxFit.cover,
+                                )
+                              : Image.file(
+                                  File(_selectedImage!.path),
+                                  fit: BoxFit.cover,
+                                ),
                           Positioned(
                             top: 10,
                             right: 10,
